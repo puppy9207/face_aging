@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import imgA from '../static/PSNR.png';
+import imgA from '../static/logo.png';
 const TopBarTemplateBlock = styled.div`
 
   position: fixed; /* 추후 박스 하단에 추가 버튼을 위치시키기 위한 설정 */

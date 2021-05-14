@@ -4,6 +4,7 @@ import TopBarTemplate from './components/TopBar';
 import MainContainerTemplate from './components/MainContainer';
 import LeftContainerTemplate from './components/LeftContainer';
 import RightContainerTemplate from './components/RightContainer';
+import CropTemplate from './components/CropImage';
 const GlobalStyle = createGlobalStyle`
   body {
     background: #e9ecef;
@@ -16,7 +17,9 @@ function App() {
     <GlobalStyle />
     <TopBarTemplate></TopBarTemplate>
     <MainContainerTemplate>
-      <LeftContainerTemplate>으아아</LeftContainerTemplate>
+      <LeftContainerTemplate>
+        <CropTemplate></CropTemplate>
+        </LeftContainerTemplate>
       <RightContainerTemplate>호호호</RightContainerTemplate>
     </MainContainerTemplate>
     </>
