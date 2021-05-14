@@ -6,6 +6,8 @@ import LeftContainerTemplate from './components/LeftContainer';
 import RightContainerTemplate from './components/RightContainer';
 import CropTemplate from './components/CropImage';
 import imgA from './static/logo.png';
+import Grid from '@material-ui/core/Grid';
+import { Button } from "@material-ui/core";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -21,7 +23,7 @@ const TopBarTemplateBlock = styled.div`
   height:3rem;
   color:white;
   margin-top:-5rem;
-  padding:12px 12px 10px 2.5rem;
+  padding:8px 12px 12px 2.5rem;
   display:flex;
   z-index:2;
 `;
@@ -31,7 +33,13 @@ function App() {
     <>
     <GlobalStyle />
     <TopBarTemplateBlock>
-      <img src={ imgA } />
+      <Grid container>
+        <Grid item sm={3} xs={12}><a href="#"><img width="25%" src={ imgA }/></a></Grid>
+        <Grid item sm={6} xs={0} ></Grid>
+        <Grid item sm={1} xs={0}><p>BEST STYLE</p></Grid>
+        <Grid item sm={1} xs={0}><p>머리스타일링</p></Grid>
+        <Grid item sm={1} xs={0}><p>사용자</p></Grid>
+      </Grid>
     </TopBarTemplateBlock>
     <MainContainerTemplate>
       <LeftContainerTemplate>
