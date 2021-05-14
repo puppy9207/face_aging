@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import Grid from '@material-ui/core/Grid';
+import { Button } from "@material-ui/core";
 function generateDownload(canvas, crop) {
   if (!crop || !canvas) {
     return;
@@ -29,9 +30,10 @@ export default function App() {
   const previewCanvasRef = useRef(null);
   const [crop, setCrop] = useState({ unit: '%', width: 30});
   const [completedCrop, setCompletedCrop] = useState(null);
-
+  const [guide,setGuide] = useState(true);
   const onSelectFile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
+      setGuide(v=>!v);
       const reader = new FileReader();
       reader.addEventListener('load', () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
@@ -78,7 +80,7 @@ export default function App() {
 
   return (
     <Grid container className="App">
-        <Grid item sm={9} xs={12}>
+        <Grid item sm={12} xs={12}>
             <ReactCrop
                 src={upImg}
                 onImageLoaded={onLoad}
@@ -86,31 +88,35 @@ export default function App() {
                 onChange={(c) => setCrop(c)}
                 onComplete={(c) => setCompletedCrop(c)}
             />
-            <div>
-                <input type="file" accept="image/*" onChange={onSelectFile} />
-            </div>
+            
         </Grid>
-        <Grid item sm={3} xs={12}>
-            <div>
+        <Grid item sm={12} xs={12}>
+        { guide ? <p>이미지를 넣어주세요</p> : null }
+        </Grid>
+        <Grid item sm={ guide ? 12 : 6 }xs={12}>
                 <canvas
                 ref={previewCanvasRef}
                 // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
                 style={{
                     width: Math.round(completedCrop?.width ?? 0),
-                    height: Math.round(completedCrop?.height ?? 0)
+                    height: Math.round(completedCrop?.height ?? 0),
+                    display:"none"
                 }}
                 />
-            </div>
-            <button
-                type="button"
-                disabled={!completedCrop?.width || !completedCrop?.height}
-                onClick={() =>
-                generateDownload(previewCanvasRef.current, completedCrop)
-                }
-            >
+            <input type="file" accept="image/*" onChange={onSelectFile} />
+        </Grid>
+        {guide ? null : <Grid item sm={3} xs={12}>
+            <Button variant="outlined"
+                    type="button"
+                    disabled={!completedCrop?.width || !completedCrop?.height}
+                    onClick={() =>
+                    generateDownload(previewCanvasRef.current, completedCrop)
+                    }
+                >
                 Download cropped image
-            </button>
-      </Grid>
+            </Button>
+        </Grid> }
+        
     </Grid>
    
   );
