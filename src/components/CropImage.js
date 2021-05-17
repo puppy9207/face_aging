@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
 import Grid from '@material-ui/core/Grid';
 import { Button } from "@material-ui/core";
 function generateDownload(canvas, crop) {
@@ -93,7 +92,7 @@ export default function App() {
         <Grid item sm={12} xs={12}>
         { guide ? <p>이미지를 넣어주세요</p> : null }
         </Grid>
-        <Grid item sm={ guide ? 12 : 6 }xs={12}>
+        <Grid item sm={ guide ? 12 : 6 } xs={12} p={1}>
                 <canvas
                 ref={previewCanvasRef}
                 // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
@@ -105,7 +104,7 @@ export default function App() {
                 />
             <input type="file" accept="image/*" onChange={onSelectFile} />
         </Grid>
-        {guide ? null : <Grid item sm={3} xs={12}>
+        {guide ? null : <Grid item sm={3} xs={12} p={1}>
             <Button variant="outlined"
                     type="button"
                     disabled={!completedCrop?.width || !completedCrop?.height}

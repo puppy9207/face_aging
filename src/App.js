@@ -9,6 +9,10 @@ import RightContainerTemplate from './components/RightContainer';
 import CropTemplate from './components/CropImage';
 import imgA from './static/logo.png';
 import Grid from '@material-ui/core/Grid';
+<<<<<<< HEAD
+=======
+import { Button } from "@material-ui/core";
+>>>>>>> d0fb1b5514e7225fae833635dae2ecba23cda638
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -35,7 +39,7 @@ const TopBarTemplateBlock = styled.div`
   height:3rem;
   color:white;
   margin-top:-5rem;
-  padding:12px 12px 10px 2.5rem;
+  padding:8px 12px 12px 2.5rem;
   display:flex;
   z-index:10;
 `;
