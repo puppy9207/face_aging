@@ -9,10 +9,6 @@ import RightContainerTemplate from './components/RightContainer';
 import CropTemplate from './components/CropImage';
 import imgA from './static/logo.png';
 import Grid from '@material-ui/core/Grid';
-<<<<<<< HEAD
-=======
-import { Button } from "@material-ui/core";
->>>>>>> d0fb1b5514e7225fae833635dae2ecba23cda638
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
