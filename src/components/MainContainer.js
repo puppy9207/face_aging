@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
+import CropTemplate from './CropImage';
 const MainTemplateBlock = styled.div`
   height: 100%;
 
@@ -13,9 +14,7 @@ const MainTemplateBlock = styled.div`
 
 function MainContainerTemplate({ children }) {
   return <MainTemplateBlock>
-    <Grid container spacing={1}>
-    {children}
-    </Grid>
+      {children}
     </MainTemplateBlock>;
 }
 

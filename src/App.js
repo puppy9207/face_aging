@@ -3,10 +3,9 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import MainContainerTemplate from './components/MainContainer';
-import LeftContainerTemplate from './components/LeftContainer';
-import RightContainerTemplate from './components/RightContainer';
 import CropTemplate from './components/CropImage';
+import MainContainer from './components/MainContainer';
+import MainCarousel from './components/MainCarousel';
 import imgA from './static/logo.png';
 import Grid from '@material-ui/core/Grid';
 
@@ -20,7 +19,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
-import Toolbar from '@material-ui/core/Toolbar';
+
 const GlobalStyle = createGlobalStyle`
   body {
     background: #e9ecef;
@@ -101,6 +100,7 @@ function App() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [page, setPage] = React.useState(0);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -108,13 +108,16 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const pageChange = (index) =>{
+    setPage(index)
+  }
 
   return (
     <>
     <GlobalStyle />
     <TopBarTemplateBlock>
       <Grid container justify="space-between">
-        <Grid item xs={9} sm={2}><a href="#"><img src={ imgA } style={{height:"3rem"}}/></a></Grid>
+        <Grid item xs={9} sm={2}><a href="#" onClick={() => pageChange(0)}><img src={ imgA } style={{height:"3rem"}}/></a></Grid>
         <Grid item xs={3} sm={1}>
           <IconButton
             color="inherit"
@@ -129,12 +132,22 @@ function App() {
       </Grid>
       
     </TopBarTemplateBlock>
-        <MainContainerTemplate>
-          <LeftContainerTemplate>
+      <MainContainer>
+        {
+          page===0 &&
+            <MainCarousel></MainCarousel>
+        }
+        { page===1 &&
             <CropTemplate></CropTemplate>
-            </LeftContainerTemplate>
-          <RightContainerTemplate></RightContainerTemplate>
-        </MainContainerTemplate>
+        }
+        {
+          page===2 &&
+            null
+        }
+
+          
+      </MainContainer>
+        
     <Drawer
         className={classes.drawer}
         variant="persistent"
@@ -150,8 +163,8 @@ function App() {
     </div>
     <Divider />
     <List>
-      {['메인페이지', '이미지 자르기', '저시기'].map((text, index) => ( 
-        <ListItem button key={text}>
+      {['메인페이지', '이미지 자르기', '염색해보기'].map((text, index) => (
+        <ListItem button key={text} onClick={() => pageChange(index)}>
           <ListItemText primary={text} />
         </ListItem>
       ))}
