@@ -6,6 +6,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import imgA from '../static/Main1.png';
 import imgB from '../static/Main2.png';
 import imgC from '../static/Main3.png';
+import styled from 'styled-components';
+const CarouselBlock = styled.div`
+  height: 100%;
+
+  position: relative; /* 추후 박스 하단에 추가 버튼을 위치시키기 위한 설정 */
+`;
+
 function MainCarousel(props) {
     var items = [
         {
@@ -19,11 +26,11 @@ function MainCarousel(props) {
         }
     ]
 
-    return <Carousel>
+    return<CarouselBlock><Carousel>
     {
         items.map( (item, i) => <Item key={i} item={item} /> )
     }
-    </Carousel>
+    </Carousel></CarouselBlock>
   }
 const useStyles = makeStyles({
     media: {

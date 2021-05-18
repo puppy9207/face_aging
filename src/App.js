@@ -28,13 +28,12 @@ const GlobalStyle = createGlobalStyle`
 
 const TopBarTemplateBlock = styled.div`
 
-  position: fixed; /* 추후 박스 하단에 추가 버튼을 위치시키기 위한 설정 */
   background: #978875;
   width:100%;
   height:3rem;
   color:white;
-  margin-top:-5rem;
-  padding:8px 12px 12px 2.5rem;
+  
+  padding:8px 0 12px 0;
   display:flex;
   z-index:10;
 `;
@@ -117,7 +116,7 @@ function App() {
     <GlobalStyle />
     <TopBarTemplateBlock>
       <Grid container justify="space-between">
-        <Grid item xs={9} sm={2}><a href="#" onClick={() => pageChange(0)}><img src={ imgA } style={{height:"3rem"}}/></a></Grid>
+        <Grid item xs={9} sm={2}><a href="#" onClick={() => pageChange(0)}><img src={ imgA } style={{height:"3rem",marginLeft:"2.5rem"}}/></a></Grid>
         <Grid item xs={3} sm={1}>
           <IconButton
             color="inherit"
@@ -132,13 +131,16 @@ function App() {
       </Grid>
       
     </TopBarTemplateBlock>
-      <MainContainer>
-        {
+      {
           page===0 &&
             <MainCarousel></MainCarousel>
         }
+      
+        
         { page===1 &&
+        <MainContainer>
             <CropTemplate></CropTemplate>
+        </MainContainer>
         }
         {
           page===2 &&
@@ -146,7 +148,7 @@ function App() {
         }
 
           
-      </MainContainer>
+     
         
     <Drawer
         className={classes.drawer}

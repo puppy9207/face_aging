@@ -104,7 +104,7 @@ export default function App() {
         </Grid>
       </Grid>
       <Grid item container direction="column" alignItems="center" sm={6} xs={12} >
-        <Grid container direction="column" alignItems="center" justify="flex-end" sm={12} style={{background: "#898989",borderRadius: "16px",padding:"1rem"}}>
+        <Grid container direction="column" alignItems="center" justify="flex-end" sm={12} style={{background: "#D7D7D7",borderRadius: "16px",padding:"1rem"}}>
           <Grid item sm={11}>
             <canvas
                       ref={previewCanvasRef}
