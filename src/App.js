@@ -5,6 +5,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import CropTemplate from './components/CropImage';
 import MainContainer from './components/MainContainer';
+import MainBoard from './components/MainBoard';
+import SubBoard from './components/SubBoard';
 import MainCarousel from './components/MainCarousel';
 import imgA from './static/logo.png';
 import Grid from '@material-ui/core/Grid';
@@ -110,7 +112,6 @@ function App() {
   const pageChange = (index) =>{
     setPage(index)
   }
-
   return (
     <>
     <GlobalStyle />
@@ -119,6 +120,7 @@ function App() {
         <Grid item xs={9} sm={2}><a href="#" onClick={() => pageChange(0)}><img src={ imgA } style={{height:"3rem",marginLeft:"2.5rem"}}/></a></Grid>
         <Grid item xs={3} sm={1}>
           <IconButton
+            style={{float:"right", marginRight:"1rem"}}
             color="inherit"
             aria-label="open drawer"
             edge="end"
@@ -133,7 +135,13 @@ function App() {
     </TopBarTemplateBlock>
       {
           page===0 &&
+          <>
             <MainCarousel></MainCarousel>
+            <Grid container>
+              <MainBoard></MainBoard>
+              <SubBoard></SubBoard>
+            </Grid>
+          </>
         }
       
         

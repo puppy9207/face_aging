@@ -8,9 +8,7 @@ import imgB from '../static/Main2.png';
 import imgC from '../static/Main3.png';
 import styled from 'styled-components';
 const CarouselBlock = styled.div`
-  height: 100%;
-
-  position: relative; /* 추후 박스 하단에 추가 버튼을 위치시키기 위한 설정 */
+    color:white;
 `;
 
 function MainCarousel(props) {
@@ -26,7 +24,7 @@ function MainCarousel(props) {
         }
     ]
 
-    return<CarouselBlock><Carousel>
+    return<CarouselBlock ><Carousel timeout={700} indicators={false} navButtonsAlwaysVisible={true}>
     {
         items.map( (item, i) => <Item key={i} item={item} /> )
     }
@@ -35,7 +33,7 @@ function MainCarousel(props) {
 const useStyles = makeStyles({
     media: {
         height: 0,
-        paddingTop: '43%',
+        paddingTop: '40%',
       },
   });
   
@@ -43,13 +41,12 @@ function Item(props)
 {
     const classes = useStyles();
     return (
-        <Card>
             <CardMedia
             className={classes.media}
             image={props.item.url}
             title="card img"
+            style={{backgroundSize:"100%"}}
             />
-        </Card>
     )
 }
 export default MainCarousel;
