@@ -10,7 +10,7 @@ const MainTemplateBlock = styled.div`
 
 function MainContainerTemplate({ children }) {
   return <MainTemplateBlock>
-      {children}
+    {children.loading?<p>Loading</p>:children}
     </MainTemplateBlock>;
 }
 
