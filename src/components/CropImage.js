@@ -81,19 +81,36 @@ const Crops = (props) => {
     var dataURL = canvas.toDataURL("image/png");
     return dataURL;
   }
+  function getFileToBase64Image(file) {
+
+    var canvas = document.createElement('CANVAS');
+    let img = document.createElement('avatar');
+    img.onload = function()
+    {
+        canvas.height = img.height;
+        canvas.width = img.width;
+        var dataURL = canvas.toDataURL('image/png');
+
+        canvas = null;
+        return dataURL
+    };
+    img.src = file;
+  }
 
   //rest api 서버에 이미지 두개를 넘겨줌
   async function uploadCropImage(canvas, crop, index) {
       if (!crop || !canvas) {
         return;
       }
+      // canvas object를 base64 문자열로 변환
       props.setLoading(true)
       const filedata = getBase64Image(document.getElementsByClassName('images').item(index));
       const formData = new FormData();
       const temp = canvas.toDataURL('images/png')
       const decodImg1 = atob(temp.split(',')[1]);
       const decodImg2 = atob(filedata.split(',')[1]);
-
+      
+      //base64문자열을 file 객체로 변환
       let array1 = [];
       let array2 = [];
       for (let i = 0; i < decodImg1 .length; i++) {
@@ -108,10 +125,12 @@ const Crops = (props) => {
       const fileName2 = 'file2' + new Date().getMilliseconds() + '.png';
 
 
-      
+      //form에 이미지 두개를 싣는다.
       formData.append("xs",file1,fileName1)
       formData.append("xt",file2,fileName2)
-      const response = await axios({
+
+      //axios로 post 전송
+      await axios({
         method: "POST",
         url: "http://192.168.0.213:5000/imageupload/",
         data: formData,
@@ -128,9 +147,9 @@ const Crops = (props) => {
       .catch(error => {
           props.setModel(v=>!v);
           props.setLoading(false)
-          props.setImgLink(error.response.statusText);
+          props.setImgLink("에러입니다.");
           setTimeout(function(){
-            props.setPage(0)
+            props.setPage(3)
             props.setPage(1)
           },3000)
           console.log(error.response)
@@ -145,7 +164,6 @@ const Crops = (props) => {
     if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
       return;
     }
-
     const image = imgRef.current;
     const canvas = previewCanvasRef.current;
     const crop = completedCrop;
@@ -173,45 +191,59 @@ const Crops = (props) => {
       crop.height
     );
   }, [completedCrop]);
-
-  const tileData = [
-       {
-         img: im1,
-         title: '<= 이 얼굴과 합쳐보기',
-        author: 'author',
-         featured: true,
-       },
-       {
-        img: im2,
+  const [tiled,setTiled] = useState();
+  const onSelectTileFile = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader();
+      
+      
+      reader.addEventListener('load', () => setTileData(tileData.concat({
+        img: reader.result,
         title: '<= 이 얼굴과 합쳐보기',
        author: 'author',
-        featured: true,
-      },
-      {
-        img: im3,
-        title: '<= 이 얼굴과 합쳐보기',
-       author: 'author',
-        featured: true,
-      },
-      {
-        img: im4,
-        title: '<= 이 얼굴과 합쳐보기',
-       author: 'author',
-        featured: true,
-      },
-      {
-        img: im5,
-        title: '<= 이 얼굴과 합쳐보기',
-       author: 'author',
-        featured: true,
-      },
-      {
-        img: im6,
-        title: '<= 이 얼굴과 합쳐보기',
-       author: 'author',
-        featured: true,
-      },
-     ];
+        featured: true,})));
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+  const [tileData,setTileData] = useState([
+    {
+      img: im1,
+      title: '<= 이 얼굴과 합쳐보기',
+     author: 'author',
+      featured: true,
+    },
+    {
+     img: im2,
+     title: '<= 이 얼굴과 합쳐보기',
+    author: 'author',
+     featured: true,
+   },
+   {
+     img: im3,
+     title: '<= 이 얼굴과 합쳐보기',
+    author: 'author',
+     featured: true,
+   },
+   {
+     img: im4,
+     title: '<= 이 얼굴과 합쳐보기',
+    author: 'author',
+     featured: true,
+   },
+   {
+     img: im5,
+     title: '<= 이 얼굴과 합쳐보기',
+    author: 'author',
+     featured: true,
+   },
+   {
+     img: im6,
+     title: '<= 이 얼굴과 합쳐보기',
+    author: 'author',
+     featured: true,
+   },
+  ]);
+  
 
 
   return (
@@ -222,6 +254,7 @@ const Crops = (props) => {
 
             {guide?null:
             <Grid item sm={12} xs={12}>
+                <p>얼굴에 맞게 조정해주세요</p>
                 <ReactCrop
                     src={upImg}
                     onImageLoaded={onLoad}
@@ -230,6 +263,7 @@ const Crops = (props) => {
                     onChange={(c) => setCrop(c)}
                     onComplete={(c) => setCompletedCrop(c)}
                     />
+                  
             </Grid>}
 
             <Grid item sm={12} xs={12}>
@@ -249,6 +283,7 @@ const Crops = (props) => {
       <Grid item container direction="row" sm={12} xs={12} style={{backgroundColor:"#D7D7D7",padding:"2vw"}}>
         <Grid container direction="column" justify="center" alignItems="center" sm={6} >
             <Grid item sm={12}>
+              <p>조정된 이미지</p>
               <canvas
                         ref={previewCanvasRef}
                         // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
@@ -262,8 +297,9 @@ const Crops = (props) => {
             </Grid>
         </Grid>
         <Grid item sm={6}  style={{height:"45vh",overflowX:"hidden",overflowY:"auto" }}>
+          <input type={"file"} accept="image/png,image/jpg,image/jpeg" onChange={onSelectTileFile}></input>
           <GridList cellHeight={200} spacing={1}>
-              {tileData.map((tile,index) => (
+              {tileData.slice(0).reverse().map((tile,index) => (
               <GridListTile key={tile.img} cols={tile.featured ? 2 : 1} rows={tile.featured ? 2 : 1}>
                 <img className={"images"} src={tile.img} alt={tile.title} />
                 <GridListTileBar

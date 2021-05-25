@@ -21,13 +21,13 @@ function MainContainerTemplate(props) {
   const [model, setModel] = useState(false);
   const [imgLink, setImgLink] = useState("initial");
   const [loading, setLoading] = useState(false);
-  return <> 
-  {model ? 
-    <p>{imgLink}</p> 
-    
-    
-    :loading? 
-        <LoadingTemplateBlock>
+
+  if (model){
+      return <p>{imgLink}</p>
+  }
+  else{
+    if(loading){
+      return <LoadingTemplateBlock>
             <Loader
             type="Puff"
             color="#978875"
@@ -35,12 +35,12 @@ function MainContainerTemplate(props) {
             width={100} 
           />
         </LoadingTemplateBlock>
-
-
-        :
-        <MainTemplateBlock >
-          <CropImage setModel={setModel} setImgLink={setImgLink} setLoading={setLoading} setPage={props.setPage}></CropImage>
-        </MainTemplateBlock>}</>
+    }else{
+        return <MainTemplateBlock >
+        <CropImage setModel={setModel} setImgLink={setImgLink} setLoading={setLoading} setPage={props.setPage}></CropImage>
+      </MainTemplateBlock>
+    }
+  }
 }
 
 export default MainContainerTemplate;
