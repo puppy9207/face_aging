@@ -191,7 +191,6 @@ const Crops = (props) => {
       crop.height
     );
   }, [completedCrop]);
-  const [tiled,setTiled] = useState();
   const onSelectTileFile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
