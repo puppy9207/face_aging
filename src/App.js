@@ -3,7 +3,6 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import CropTemplate from './components/CropImage';
 import MainContainer from './components/MainContainer';
 import MainBoard from './components/MainBoard';
 import SubBoard from './components/SubBoard';
@@ -146,8 +145,7 @@ function App() {
       
         
         { page===1 &&
-        <MainContainer>
-            <CropTemplate></CropTemplate>
+        <MainContainer setPage={setPage}>
         </MainContainer>
         }
         {
@@ -173,7 +171,7 @@ function App() {
     </div>
     <Divider />
     <List>
-      {['메인페이지', '이미지 자르기', '염색해보기'].map((text, index) => (
+      {['메인페이지', '스타일 변환'].map((text, index) => (
         <ListItem button key={text} onClick={() => pageChange(index)}>
           <ListItemText primary={text} />
         </ListItem>

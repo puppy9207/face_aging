@@ -1,6 +1,5 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel'
-import { Card } from '@material-ui/core'
 import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core/styles';
 import imgA from '../static/Main1.png';

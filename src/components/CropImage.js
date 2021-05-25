@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import Grid from '@material-ui/core/Grid';
-import { Button } from "@material-ui/core";
+// import { Button } from "@material-ui/core";
 import Dropzone from 'react-dropzone'
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -18,32 +18,31 @@ import im4 from '../static/exampleImg/4.jpg';
 import im5 from '../static/exampleImg/5.jpg';
 import im6 from '../static/exampleImg/6.jpg';
 // 이벤트 발생시 사용자의 컴퓨터에 crop한 이미지를 저장하는 함수
-function generateDownload(canvas, crop) {
-  if (!crop || !canvas) {
-    return;
-  }
+// function generateDownload(canvas, crop) {
+//   if (!crop || !canvas) {
+//     return;
+//   }
 
-  canvas.toBlob(
-    (blob) => {
-      const previewUrl = window.URL.createObjectURL(blob);
+//   canvas.toBlob(
+//     (blob) => {
+//       const previewUrl = window.URL.createObjectURL(blob);
 
-      const anchor = document.createElement('a');
-      anchor.download = 'cropPreview.png';
-      anchor.href = URL.createObjectURL(blob);
-      anchor.click();
+//       const anchor = document.createElement('a');
+//       anchor.download = 'cropPreview.png';
+//       anchor.href = URL.createObjectURL(blob);
+//       anchor.click();
 
-      window.URL.revokeObjectURL(previewUrl);
-    },
-    'image/png',
-    1
-  );
-}
+//       window.URL.revokeObjectURL(previewUrl);
+//     },
+//     'image/png',
+//     1
+//   );
+// }
 
 
 
 // 메인 함수
-export default function App() {
-  const [loading, setLoading] = useState(false);
+const Crops = (props) => {
   //이미지가 저장되는 state
   const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);
@@ -80,7 +79,7 @@ export default function App() {
     var ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0);
     var dataURL = canvas.toDataURL("image/png");
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    return dataURL;
   }
 
   //rest api 서버에 이미지 두개를 넘겨줌
@@ -88,20 +87,55 @@ export default function App() {
       if (!crop || !canvas) {
         return;
       }
+      props.setLoading(true)
       const filedata = getBase64Image(document.getElementsByClassName('images').item(index));
       const formData = new FormData();
       const temp = canvas.toDataURL('images/png')
-      setLoading(true)
-      formData.append("image",temp)
-      formData.append("image",filedata)
+      const decodImg1 = atob(temp.split(',')[1]);
+      const decodImg2 = atob(filedata.split(',')[1]);
+
+      let array1 = [];
+      let array2 = [];
+      for (let i = 0; i < decodImg1 .length; i++) {
+        array1.push(decodImg1 .charCodeAt(i));
+      }
+      for (let i = 0; i < decodImg2 .length; i++) {
+        array2.push(decodImg2 .charCodeAt(i));
+      }
+      const file1 = new Blob([new Uint8Array(array1)], {type: 'image/png'});
+      const fileName1 = 'file1' + new Date().getMilliseconds() + '.png';
+      const file2 = new Blob([new Uint8Array(array2)], {type: 'image/png'});
+      const fileName2 = 'file2' + new Date().getMilliseconds() + '.png';
+
+
+      
+      formData.append("xs",file1,fileName1)
+      formData.append("xt",file2,fileName2)
       const response = await axios({
         method: "POST",
         url: "http://192.168.0.213:5000/imageupload/",
         data: formData,
         headers: { "Content-Type": "multipart/form-data", Authorization: localStorage.getItem("access_token") }
+      }).then(response => { 
+        props.setModel(v=>!v);
+        props.setImgLink(response.data.message);
+        props.setLoading(false)
+        setTimeout(function(){
+          props.setPage(0)
+        },3000)
+        console.log(response.data.message)
+      })
+      .catch(error => {
+          props.setModel(v=>!v);
+          props.setLoading(false)
+          props.setImgLink(error.response.statusText);
+          setTimeout(function(){
+            props.setPage(0)
+            props.setPage(1)
+          },3000)
+          console.log(error.response)
       });
-      setLoading(false)
-      console.log(response)
+      
     }
   // crop
   useEffect(() => {
@@ -143,37 +177,37 @@ export default function App() {
   const tileData = [
        {
          img: im1,
-         title: 'Image',
+         title: '<= 이 얼굴과 합쳐보기',
         author: 'author',
          featured: true,
        },
        {
         img: im2,
-        title: 'Image',
+        title: '<= 이 얼굴과 합쳐보기',
        author: 'author',
         featured: true,
       },
       {
         img: im3,
-        title: 'Image',
+        title: '<= 이 얼굴과 합쳐보기',
        author: 'author',
         featured: true,
       },
       {
         img: im4,
-        title: 'Image',
+        title: '<= 이 얼굴과 합쳐보기',
        author: 'author',
         featured: true,
       },
       {
         img: im5,
-        title: 'Image',
+        title: '<= 이 얼굴과 합쳐보기',
        author: 'author',
         featured: true,
       },
       {
         img: im6,
-        title: 'Image',
+        title: '<= 이 얼굴과 합쳐보기',
        author: 'author',
         featured: true,
       },
@@ -182,9 +216,9 @@ export default function App() {
 
   return (
 
-    <Grid container spacing={2}>
-      <Grid item sm={guide?12:5} xs={12}>
-        <Grid container className="App" style={{background: "#D7D7D7",padding:"1rem 2.5rem 1rem 2.5rem"}}>
+    <Grid container spacing={3}>
+      <Grid item sm={12} xs={12}>
+        <Grid container className="App" style={{background: "#D7D7D7",padding:"1rem 0rem 1rem 0rem" ,overflowX:"hidden",overflowY:"auto"}}>
 
             {guide?null:
             <Grid item sm={12} xs={12}>
@@ -192,14 +226,16 @@ export default function App() {
                     src={upImg}
                     onImageLoaded={onLoad}
                     crop={crop}
+                    style={{width:"30vh"}}
                     onChange={(c) => setCrop(c)}
-                    onComplete={(c) => setCompletedCrop(c)}/>
+                    onComplete={(c) => setCompletedCrop(c)}
+                    />
             </Grid>}
 
             <Grid item sm={12} xs={12}>
             { guide ? <Dropzone onDrop={acceptedFiles => onSelectFile(acceptedFiles)}>{({getRootProps, getInputProps}) => (
                       <section>
-                        <div style={{display:"flex",height:"40rem",justifyContent:"center",alignItems:"center"}} {...getRootProps()}>
+                        <div style={{display:"flex",height:"40vw",justifyContent:"center",alignItems:"center"}} {...getRootProps()}>
                           <input {...getInputProps()} accept="image/jpeg,image/png,image/jpg,image/bmp" />
                           <p>변환하고 싶은 사진을 drag & drop 혹은 클릭해서 넣어주세요</p>
                         </div>
@@ -210,8 +246,8 @@ export default function App() {
         </Grid>
       </Grid>
       {guide ? null :
-      <Grid item container direction="row" sm={7} xs={12} style={{backgroundColor:"#D7D7D7"}}>
-        <Grid container direction="column" justify="center" alignItems="center" sm={6} style={{paddingTop:"0.5rem",paddingBottom:"0.5rem"}}>
+      <Grid item container direction="row" sm={12} xs={12} style={{backgroundColor:"#D7D7D7",padding:"2vw"}}>
+        <Grid container direction="column" justify="center" alignItems="center" sm={6} >
             <Grid item sm={12}>
               <canvas
                         ref={previewCanvasRef}
@@ -219,13 +255,13 @@ export default function App() {
                         style={{
                             // width: Math.round(completedCrop?.width ?? 0),
                             // height: Math.round(completedCrop?.height ?? 0),
-                            width:"18rem",
-                            height:"18rem",
+                            width:"25vh",
+                            height:"25vh",
                         }}
                         />
             </Grid>
         </Grid>
-        <Grid item sm={6}  style={{height:"23rem",borderLeft:"1px dashed",overflowX:"hidden",overflowY:"auto" }}>
+        <Grid item sm={6}  style={{height:"45vh",overflowX:"hidden",overflowY:"auto" }}>
           <GridList cellHeight={200} spacing={1}>
               {tileData.map((tile,index) => (
               <GridListTile key={tile.img} cols={tile.featured ? 2 : 1} rows={tile.featured ? 2 : 1}>
@@ -234,7 +270,7 @@ export default function App() {
                   title={tile.title}
                   titlePosition="top"
                   actionIcon={
-                    <IconButton onClick = {() =>uploadCropImage(previewCanvasRef.current, completedCrop,index)} aria-label={`star ${tile.title}`}>
+                    <IconButton onClick = {() =>uploadCropImage(previewCanvasRef.current, completedCrop,index,tile.title)} aria-label={`star ${tile.title}`}>
                       <StarBorderIcon />
                     </IconButton>
                   }
@@ -249,7 +285,7 @@ export default function App() {
   );
   
 }
-
+export default Crops
 {/* <Button variant="outlined" type="button" disabled={!completedCrop?.width || !completedCrop?.height} onClick={() =>
                           generateDownload(previewCanvasRef.current, completedCrop)
                           }

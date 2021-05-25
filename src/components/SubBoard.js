@@ -7,36 +7,25 @@ const MainBoardBlock = styled.div`
   background: #ef39ee;
 `;
 const columns = [
-    { field: 'id', headerName: 'ID'},
-    { field: 'firstName', headerName: 'First name'},
-    { field: 'lastName', headerName: 'Last name'},
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      valueGetter: (params) =>
-        `${params.getValue(params.id, 'firstName') || ''} ${
-          params.getValue(params.id, 'lastName') || ''
-        }`,
-    },
+    { field: 'id', headerName: 'ID', width: 50 },
+    { field: 'date', headerName: 'Date', width: 200 },
+    { field: 'content', headerName: 'Content', width: 450 },
+    { field: 'vote', headerName: 'Vote', width: 200 }
   ];
   
   const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    { id: 1, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:15},
+    { id: 2, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 3, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 4, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 5, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:15},
+    { id: 6, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 7, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 8, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 9, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:15},
+    { id: 10, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 11, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
+    { id: 12, date: '2021-05-12', content: "사용자 게시판입니다. 새로운 내용이 들어갈지는 모르겠네요" ,vote:0},
   ];
 
 function MainBoardTemplate() {
