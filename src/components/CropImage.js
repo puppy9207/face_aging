@@ -57,10 +57,16 @@ const Crops = (props) => {
   const onSelectFile = useCallback((acceptedFiles) => {
     
     acceptedFiles.forEach((file) => {
+      console.log(file.name)
+      var ext = file.name.slice(file.name.lastIndexOf(".") + 1).toLowerCase();
+      if (!( ext == "jpg" || ext == "png"|| ext == "jpeg" )) {
+        alert("이미지파일만 업로드 가능합니다.");
+        return false;
+      }
       const reader = new FileReader();
-      setGuide(v=>!v);
       reader.onabort = () => console.log('file reading was aborted')
       reader.onerror = () => console.log('file reading has failed')
+      setGuide(v=>!v);
       reader.addEventListener('load', () => setUpImg(reader.result));
       reader.readAsDataURL(file);
     })
@@ -74,28 +80,14 @@ const Crops = (props) => {
   function getBase64Image(img) {
 
     var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    var aaa = canvas.getContext("2d");
+    aaa.drawImage(img, 0, 0);
     var dataURL = canvas.toDataURL("image/png");
     return dataURL;
   }
-  function getFileToBase64Image(file) {
 
-    var canvas = document.createElement('CANVAS');
-    let img = document.createElement('avatar');
-    img.onload = function()
-    {
-        canvas.height = img.height;
-        canvas.width = img.width;
-        var dataURL = canvas.toDataURL('image/png');
-
-        canvas = null;
-        return dataURL
-    };
-    img.src = file;
-  }
 
   //rest api 서버에 이미지 두개를 넘겨줌
   async function uploadCropImage(canvas, crop, index) {
@@ -113,10 +105,10 @@ const Crops = (props) => {
       //base64문자열을 file 객체로 변환
       let array1 = [];
       let array2 = [];
-      for (let i = 0; i < decodImg1 .length; i++) {
+      for (let i = 0; i < decodImg1.length; i++) {
         array1.push(decodImg1 .charCodeAt(i));
       }
-      for (let i = 0; i < decodImg2 .length; i++) {
+      for (let i = 0; i < decodImg2.length; i++) {
         array2.push(decodImg2 .charCodeAt(i));
       }
       const file1 = new Blob([new Uint8Array(array1)], {type: 'image/png'});
@@ -135,24 +127,53 @@ const Crops = (props) => {
         url: "http://192.168.0.213:5000/imageupload/",
         data: formData,
         headers: { "Content-Type": "multipart/form-data", Authorization: localStorage.getItem("access_token") }
-      }).then(response => { 
-        props.setModel(v=>!v);
-        props.setImgLink(response.data.message);
-        props.setLoading(false)
-        setTimeout(function(){
-          props.setPage(0)
-        },3000)
-        console.log(response.data.message)
+      }).then(response => {
+        if(response.data.message==="얼굴을 찾을 수 업습니다."){
+          props.setSnackMsg("얼굴을 찾을 수 없습니다.")
+          props.setPage(1)
+          props.setLoading(false)
+          props.setEvent("error")
+          props.setSnackOpen({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+          })
+        }else if(response.data.message==="이미지를 불러올 수 없습니다."){
+          props.setSnackMsg("올바른 파일을 넣어주세요")
+          props.setPage(1)
+          props.setLoading(false)
+          props.setEvent("error")
+          props.setSnackOpen({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+          })
+        }
+        else{
+          console.log(response.data)
+          props.setImgLink(response.data);
+          props.setModel(v=>!v);
+          props.setEvent("success")
+          props.setSnackOpen({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+          })
+          props.setLoading(false)}
+        
       })
       .catch(error => {
-          props.setModel(v=>!v);
-          props.setLoading(false)
-          props.setImgLink("에러입니다.");
-          setTimeout(function(){
-            props.setPage(3)
-            props.setPage(1)
-          },3000)
-          console.log(error.response)
+        console.log("raise error")
+        props.setSnackMsg("서버에서 문제가 생겼습니다.")
+        props.setEvent("error")
+        props.setSnackOpen({
+          open: true,
+          vertical: 'top',
+          horizontal: 'center',
+        })
+        props.setLoading(false)
+        props.setPage(1)
+  
       });
       
     }
@@ -305,7 +326,7 @@ const Crops = (props) => {
                   title={tile.title}
                   titlePosition="top"
                   actionIcon={
-                    <IconButton onClick = {() =>uploadCropImage(previewCanvasRef.current, completedCrop,index,tile.title)} aria-label={`star ${tile.title}`}>
+                    <IconButton onClick = {() =>uploadCropImage(previewCanvasRef.current, completedCrop,index)} aria-label={`star ${tile.title}`}>
                       <StarBorderIcon />
                     </IconButton>
                   }
