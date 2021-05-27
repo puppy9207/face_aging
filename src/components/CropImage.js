@@ -11,6 +11,11 @@ import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import axios from 'axios'
 
+import ndarray from 'ndarray';
+import ops from 'ndarray-ops';
+import {Tensor, InferenceSession} from 'onnxjs';
+
+import mobilenet from '../static/mobilenet.onnx'
 import im1 from '../static/exampleImg/1.jpg';
 import im2 from '../static/exampleImg/2.jpg';
 import im3 from '../static/exampleImg/3.jpg';
@@ -52,7 +57,7 @@ const Crops = (props) => {
   const [completedCrop, setCompletedCrop] = useState(null);
   // 사용자가 이미지를 업로드 하기 전과 후를 나누는 상태
   const [guide,setGuide] = useState(true);
-
+  
   // 사용자가 파일을 업로드 하는 과정
   const onSelectFile = useCallback((acceptedFiles) => {
     
@@ -78,7 +83,7 @@ const Crops = (props) => {
     
   }, []);
   function getBase64Image(img) {
-
+    console.log(img)
     var canvas = document.createElement("canvas");
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
@@ -88,12 +93,46 @@ const Crops = (props) => {
     return dataURL;
   }
 
+  function preProcess(ctx) {
+    var ctx = ctx.getContext('2d')
+    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const { data, width, height } = imageData;
+    const dataTensor = ndarray(new Float32Array(data), [width, height, 4]);
+    const dataProcessedTensor = ndarray(new Float32Array(width * height * 3), [1, 3, width, height]);
+    ops.assign(dataProcessedTensor.pick(0, 0, null, null), dataTensor.pick(null, null, 2));
+    ops.assign(dataProcessedTensor.pick(0, 1, null, null), dataTensor.pick(null, null, 1));
+    ops.assign(dataProcessedTensor.pick(0, 2, null, null), dataTensor.pick(null, null, 0));
+    ops.divseq(dataProcessedTensor, 255);
+    ops.subseq(dataProcessedTensor.pick(0, 0, null, null), 0.485);
+    ops.subseq(dataProcessedTensor.pick(0, 1, null, null), 0.456);
+    ops.subseq(dataProcessedTensor.pick(0, 2, null, null), 0.406);
+    ops.divseq(dataProcessedTensor.pick(0, 0, null, null), 0.229);
+    ops.divseq(dataProcessedTensor.pick(0, 1, null, null), 0.224);
+    ops.divseq(dataProcessedTensor.pick(0, 2, null, null), 0.225);
+    const tensor = new Tensor(new Float32Array(3 * width * height), 'float32', [1, 3, width, height]);
+    (tensor.data).set(dataProcessedTensor.data);
+    return tensor;
+  }
+  async function runModel(model, preProcessedData){
+    const start = new Date();
+    try {
+        const outputData = await model.run([preProcessedData]);
+        const end = new Date();
+        const inferenceTime = (end.getTime() - start.getTime());
+        const output = outputData.values().next().value;
+        return [output, inferenceTime];
+    } catch (e) {
+        console.error(e);
+        throw new Error();
+    }
+  }
 
   //rest api 서버에 이미지 두개를 넘겨줌
   async function uploadCropImage(canvas, crop, index) {
       if (!crop || !canvas) {
         return;
       }
+      
       // canvas object를 base64 문자열로 변환
       props.setLoading(true)
       const filedata = getBase64Image(document.getElementsByClassName('images').item(index));
@@ -101,6 +140,14 @@ const Crops = (props) => {
       const temp = canvas.toDataURL('images/png')
       const decodImg1 = atob(temp.split(',')[1]);
       const decodImg2 = atob(filedata.split(',')[1]);
+
+      const session = new InferenceSession();
+      const url = mobilenet
+      await session.loadModel(url);
+      var imgCV = document.createElement('canvas');
+
+      const tens = preProcess(canvas);
+      const result = runModel(session,tens)
       
       //base64문자열을 file 객체로 변환
       let array1 = [];
