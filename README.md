@@ -24,7 +24,7 @@
      - model : boolean의 상태를 지님
        - 스타일 변환 과정이 모두 성공적으로 완료되면 True
        - 사용 예 :
-         ```
+         ```JSX
          if (model){
                return <>
                <Grid container>
@@ -43,13 +43,13 @@
      - imgLink : String의 상태를 지님
        - 스타일 변환 과정이 모두 성공적으로 완료되었을때 이미지의 base64 문자열을 리턴
        - 사용 예 :
-         ```
+         ```JSX
          <img src={"data:image/png;base64,"+imgLink}></img>
          ```
       - loading : boolean의 상태를 지님
         - 스타일 변환 과정 중 axios로 post요청 중 loading 상태를 결정하는 state
         - 사용 예 :
-            ```
+            ```JSX
                if(loading){
                   return <LoadingTemplateBlock>
                         <Loader
@@ -64,13 +64,13 @@
       - snackOpen : boolean의 상태를 지님
         - 스타일 변환 과정에서 성공 혹은 에러 상태를 나타내기 위한 'SnackBar' 사용을 위한 State. 하위 컴포넌트인 CropImage.js에서 사용
         - 사용 예 : 
-            ```
+            ```JSX
                   const {open, vertical, horizontal} = snackOpen;
             ```
       -  event: String의 상태를 지님
          -  SnackBar 사용시 필요한 State. Success, error, Alert 등의 상태를 가지고 있음.
          -  사용 예 :
-            ```
+            ```JSX
             <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={10000} onClose={handleClose}>
                <Alert onClose={handleClose} severity={event}>
                   {snackMsg}
@@ -80,7 +80,7 @@
       - snackMsg : String의 상태를 지님
         - SnackBar에 들어가는 메세지의 상태. 주로 백엔드 서버에서 리턴하는 메세지를 저장. 하위 컴포넌트인 CropImage.js에서 사용
         - 사용 예 :
-            ```
+            ```JSX
             <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={10000} onClose={handleClose}>
                <Alert onClose={handleClose} severity={event}>
                   {snackMsg}
