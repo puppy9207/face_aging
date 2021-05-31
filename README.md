@@ -16,6 +16,35 @@
 ![image](./figure/loading.png)
 
 ## Component 설명
+- App.js
+  - 하위 Component List
+    1. MainContainer
+  - State 설명
+    - open : boolean의 상태를 지님
+      - Drawer 기능을 사용하기 위한 상태.
+      - 사용 예 :
+```JSX
+<Drawer className={classes.drawer} variant="persistent" anchor="right"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}>
+      <div className={classes.drawerHeader}>
+         <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+         </IconButton>
+      </div>
+      <Divider>
+         <List>
+            {['메인페이지', '스타일 변환'].map((text, index) => (
+            <ListItem button key={text} onClick={() => pageChange(index)}>
+               <ListItemText primary={text} />
+            </ListItem>
+            ))}
+         </List>
+      <Divider />
+</Drawer>
+``` 
 - MainContainer.js
    -  하위 Component List
         1. MainCarousel
@@ -87,7 +116,9 @@
                </Alert>
             </Snackbar>
             ```
-사용 패키지 : react-material-ui-carousel, 
+
+
+사용 패키지 : react-material-ui-carousel
     - 패키지 다운로드 방법(npm, yarn)
       - npm install react-material-ui-carousel --save
       - yarn add react-material-ui-carousel
