@@ -11,11 +11,11 @@ import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import axios from 'axios'
 
-import ndarray from 'ndarray';
-import ops from 'ndarray-ops';
-import {Tensor, InferenceSession} from 'onnxjs';
+// import ndarray from 'ndarray';
+// import ops from 'ndarray-ops';
+// import {Tensor, InferenceSession} from 'onnxjs';
 
-import mobilenet from '../static/mobilenet.onnx'
+// import mobilenet from '../static/mobilenet.onnx'
 import im1 from '../static/exampleImg/1.jpg';
 import im2 from '../static/exampleImg/2.jpg';
 import im3 from '../static/exampleImg/3.jpg';
@@ -64,7 +64,7 @@ const Crops = (props) => {
     acceptedFiles.forEach((file) => {
       console.log(file.name)
       var ext = file.name.slice(file.name.lastIndexOf(".") + 1).toLowerCase();
-      if (!( ext == "jpg" || ext == "png"|| ext == "jpeg" )) {
+      if (!( ext === "jpg" || ext === "png"|| ext === "jpeg" )) {
         alert("이미지파일만 업로드 가능합니다.");
         return false;
       }
@@ -93,39 +93,40 @@ const Crops = (props) => {
     return dataURL;
   }
 
-  function preProcess(ctx) {
-    var ctx = ctx.getContext('2d')
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-    const { data, width, height } = imageData;
-    const dataTensor = ndarray(new Float32Array(data), [width, height, 4]);
-    const dataProcessedTensor = ndarray(new Float32Array(width * height * 3), [1, 3, width, height]);
-    ops.assign(dataProcessedTensor.pick(0, 0, null, null), dataTensor.pick(null, null, 2));
-    ops.assign(dataProcessedTensor.pick(0, 1, null, null), dataTensor.pick(null, null, 1));
-    ops.assign(dataProcessedTensor.pick(0, 2, null, null), dataTensor.pick(null, null, 0));
-    ops.divseq(dataProcessedTensor, 255);
-    ops.subseq(dataProcessedTensor.pick(0, 0, null, null), 0.485);
-    ops.subseq(dataProcessedTensor.pick(0, 1, null, null), 0.456);
-    ops.subseq(dataProcessedTensor.pick(0, 2, null, null), 0.406);
-    ops.divseq(dataProcessedTensor.pick(0, 0, null, null), 0.229);
-    ops.divseq(dataProcessedTensor.pick(0, 1, null, null), 0.224);
-    ops.divseq(dataProcessedTensor.pick(0, 2, null, null), 0.225);
-    const tensor = new Tensor(new Float32Array(3 * width * height), 'float32', [1, 3, width, height]);
-    (tensor.data).set(dataProcessedTensor.data);
-    return tensor;
-  }
-  async function runModel(model, preProcessedData){
-    const start = new Date();
-    try {
-        const outputData = await model.run([preProcessedData]);
-        const end = new Date();
-        const inferenceTime = (end.getTime() - start.getTime());
-        const output = outputData.values().next().value;
-        return [output, inferenceTime];
-    } catch (e) {
-        console.error(e);
-        throw new Error();
-    }
-  }
+  // function preProcess(ctx) {
+
+  //   var ctx = ctx.getContext('2d')
+  //   const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+  //   const { data, width, height } = imageData;
+  //   const dataTensor = ndarray(new Float32Array(data), [width, height, 4]);
+  //   const dataProcessedTensor = ndarray(new Float32Array(width * height * 3), [1, 3, width, height]);
+  //   ops.assign(dataProcessedTensor.pick(0, 0, null, null), dataTensor.pick(null, null, 2));
+  //   ops.assign(dataProcessedTensor.pick(0, 1, null, null), dataTensor.pick(null, null, 1));
+  //   ops.assign(dataProcessedTensor.pick(0, 2, null, null), dataTensor.pick(null, null, 0));
+  //   ops.divseq(dataProcessedTensor, 255);
+  //   ops.subseq(dataProcessedTensor.pick(0, 0, null, null), 0.4914);
+  //   ops.subseq(dataProcessedTensor.pick(0, 1, null, null), 0.4822);
+  //   ops.subseq(dataProcessedTensor.pick(0, 2, null, null), 0.4465);
+  //   ops.divseq(dataProcessedTensor.pick(0, 0, null, null), 0.2023);
+  //   ops.divseq(dataProcessedTensor.pick(0, 1, null, null), 0.1994);
+  //   ops.divseq(dataProcessedTensor.pick(0, 2, null, null), 0.2010);
+  //   const tensor = new Tensor(new Float32Array(3 * width * height), 'float32', [1, 3, width, height]);
+  //   (tensor.data).set(dataProcessedTensor.data);
+  //   return tensor;
+  // }
+  // async function runModel(model, preProcessedData){
+  //   const start = new Date();
+  //   try {
+  //       const outputData = await model.run([preProcessedData]);
+  //       const end = new Date();
+  //       const inferenceTime = (end.getTime() - start.getTime());
+  //       const output = outputData.values().next().value;
+  //       return [output, inferenceTime];
+  //   } catch (e) {
+  //       console.error(e);
+  //       throw new Error();
+  //   }
+  // }
 
   //rest api 서버에 이미지 두개를 넘겨줌
   async function uploadCropImage(canvas, crop, index) {
@@ -141,14 +142,15 @@ const Crops = (props) => {
       const decodImg1 = atob(temp.split(',')[1]);
       const decodImg2 = atob(filedata.split(',')[1]);
 
-      const session = new InferenceSession();
-      const url = mobilenet
-      await session.loadModel(url);
-      var imgCV = document.createElement('canvas');
+      // const session = new InferenceSession();
+      // const url = mobilenet
+      // await session.loadModel(url);
 
-      const tens = preProcess(canvas);
-      const result = runModel(session,tens)
-      
+      // const tens = preProcess(canvas);
+      // await runModel(session,tens).then(response=>{
+      //   console.log(response)
+      // })
+      // console.log(result)
       //base64문자열을 file 객체로 변환
       let array1 = [];
       let array2 = [];
@@ -197,7 +199,6 @@ const Crops = (props) => {
           })
         }
         else{
-          console.log(response.data)
           props.setImgLink(response.data);
           props.setModel(v=>!v);
           props.setEvent("success")

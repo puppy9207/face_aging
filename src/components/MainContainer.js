@@ -4,6 +4,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import React, { useState } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Loader from "react-loader-spinner";
 const LoadingTemplateBlock = styled.div`
   position:absolute;
@@ -52,7 +53,12 @@ function MainContainerTemplate(props) {
   };
   if (model){
       return <>
-      <img src={"data:image/png;base64,"+imgLink}></img>
+      <Grid container>
+        <Grid item xs={12} sm={6}></Grid>
+        <Grid item xs={12} sm={6}>
+          <img src={"data:image/png;base64,"+imgLink}></img>
+        </Grid>
+      </Grid>
       <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={10000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={event}>
           This is a success message!
