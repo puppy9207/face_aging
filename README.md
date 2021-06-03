@@ -3,49 +3,64 @@
 - 2021년 신입 입사자 팀 프로젝트입니다.
 
 - 사용 프레임워크 : React
+
+## 사용 예
+1. 메뉴 바를 클릭합니다.
+![image](./figure/main.jpg)
+2. 스타일 변환을 클릭합니다.
+![image](./figure/menubar.jpg)
+3. 이미지 파일을 Drag & Drop 혹은 클릭하여 업로드합니다.
+![image](./figure/drag.png)
+4. 얼굴을 알맞게 Crop하여 아래 조정된 이미지에 얼굴이 들어오게 합니다.
+![image](./figure/face.png)
+5. 자신의 얼굴을 합성하고 싶은 모델을 예시에서 고르거나 새로운 이미지 파일을 업로드하고 ☆를 클릭
+![image](./figure/check.jpg)
+6. 완료!
+
 ## 구현 기능
    - 메인페이지 Carousel
 ![image](./figure/main.png)
    - 이미지 업로드 후 원하는 형태로 Crop하는 기능
-![image](./figure/crop.png)
+![image](./figure/face.png)
    - Drag & Drop file upload
-![image](./figure/d&d.png)
+![image](./figure/drag.png)
    - 자신이 알아보고 싶은 스타일 이미지 업로드 기능
    - axios를 통한 POST 통신
    - 로딩 페이지 구현
 ![image](./figure/loading.png)
-
+---
 ## Component 설명
-- App.js
+---
+# App.js
   - 하위 Component List
     1. MainContainer
   - State 설명
     - open : boolean의 상태를 지님
       - Drawer 기능을 사용하기 위한 상태.
       - 사용 예 :
-```JSX
-<Drawer className={classes.drawer} variant="persistent" anchor="right"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}>
-      <div className={classes.drawerHeader}>
-         <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-         </IconButton>
-      </div>
-      <Divider>
-         <List>
-            {['메인페이지', '스타일 변환'].map((text, index) => (
-            <ListItem button key={text} onClick={() => pageChange(index)}>
-               <ListItemText primary={text} />
-            </ListItem>
-            ))}
-         </List>
-      <Divider />
-</Drawer>
-``` 
-- MainContainer.js
+         ```JSX
+         <Drawer className={classes.drawer} variant="persistent" anchor="right"
+               open={open}
+               classes={{
+                  paper: classes.drawerPaper,
+               }}>
+               <div className={classes.drawerHeader}>
+                  <IconButton onClick={handleDrawerClose}>
+                     {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                  </IconButton>
+               </div>
+               <Divider>
+                  <List>
+                     {['메인페이지', '스타일 변환'].map((text, index) => (
+                     <ListItem button key={text} onClick={() => pageChange(index)}>
+                        <ListItemText primary={text} />
+                     </ListItem>
+                     ))}
+                  </List>
+               <Divider />
+         </Drawer>
+         ``` 
+# MainContainer.js
    -  하위 Component List
         1. MainCarousel
         2. CropImage
@@ -116,6 +131,9 @@
                </Alert>
             </Snackbar>
             ```
+# CropImage.js
+   - State 설명
+     - upImg 
 
 
 사용 패키지 : react-material-ui-carousel
